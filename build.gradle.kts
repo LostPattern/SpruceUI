@@ -18,7 +18,7 @@ import java.nio.file.Path
 import java.util.regex.Pattern
 
 plugins {
-	id("fabric-loom").version("1.8.+")
+	id("dev.architectury.loom") version "1.7.+"
 	id("dev.yumi.gradle.licenser").version("1.1.+")
 	`java-library`
 	`maven-publish`
@@ -55,6 +55,13 @@ repositories {
 	maven {
 		name = "Gegy"
 		url = uri("https://maven.gegy.dev/releases/")
+	}
+	maven {
+		name = "NeoForged"
+		url = uri("https://maven.neoforged.net/releases")
+	}
+	maven {
+		url = uri("https://maven.su5ed.dev/releases")
 	}
 }
 
@@ -162,16 +169,22 @@ dependencies {
 		//parchment("org.parchmentmc.data:parchment-${mcVersion}:${project.property("parchment_mappings")}@zip")
 		mappings("dev.lambdaurora:yalmm:${mcVersion}+build.${project.property("yalmm_mappings")}")
 	})
-	modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
+	//modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
 
-	fabricModules.stream().map { fabricApi.module(it, project.property("fabric_api_version") as String) }.forEach {
-		modImplementation(it)
-	}
+	//fabricModules.stream().map { fabricApi.module(it, project.property("fabric_api_version") as String) }.forEach {
+	//	include("org.sinytra.forgified-fabric-api:${it.name}:${it.version}")
+	//	modImplementation("org.sinytra.forgified-fabric-api:${it.name}:${it.version}")
+	//}
 
-	modLocalRuntime("com.terraformersmc:modmenu:${project.property("modmenu_version")}") {
-		isTransitive = false
-	}
-	modLocalRuntime(fabricApi.module("fabric-key-binding-api-v1", project.property("fabric_api_version") as String))
+	//modLocalRuntime("com.terraformersmc:modmenu:${project.property("modmenu_version")}") {
+	//	isTransitive = false
+	//}
+	//modLocalRuntime(fabricApi.module("fabric-key-binding-api-v1", project.property("fabric_api_version") as String))
+
+	neoForge("net.neoforged:neoforge:${project.property("neoforge_version")}")
+
+	include("org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308ded19")
+	modImplementation("org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308ded19")
 
 	"testmodImplementation"(sourceSets.main.get().output)
 }
@@ -193,7 +206,7 @@ tasks.withType<JavaCompile>().configureEach {
 tasks.processResources {
 	inputs.property("version", project.version)
 
-	filesMatching("fabric.mod.json") {
+	filesMatching("META-INF/neoforge.mods.toml") {
 		expand("version" to project.version)
 	}
 }
@@ -209,7 +222,16 @@ loom {
 	runs {
 		register("testmodClient") {
 			client()
-			source(testmod)
+			//source(testmod)
+
+			mods {
+				create("main") {
+					sourceSet(sourceSets.main.get())
+				}
+				create("testmod") {
+					sourceSet(testmod)
+				}
+			}
 		}
 	}
 }

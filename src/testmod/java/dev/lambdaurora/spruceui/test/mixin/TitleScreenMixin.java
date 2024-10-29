@@ -28,6 +28,7 @@ public class TitleScreenMixin extends Screen {
 
 	@Inject(method = "init", at = @At("RETURN"))
 	private void onInit(CallbackInfo ci) {
+		System.out.println("Hello!");
 		this.addRenderableWidget(new SpruceButtonWidget(Position.of(0, 0), 150, 20, Text.literal("SpruceUI Test Menu"),
 				btn -> this.client.setScreen(new SpruceMainMenuScreen(this))).asVanilla());
 	}

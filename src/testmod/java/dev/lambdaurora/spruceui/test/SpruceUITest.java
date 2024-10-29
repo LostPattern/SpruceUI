@@ -16,10 +16,11 @@ import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import dev.lambdaurora.spruceui.widget.container.SpruceContainerWidget;
 import dev.lambdaurora.spruceui.widget.container.SpruceOptionListWidget;
 import dev.lambdaurora.spruceui.widget.text.SpruceTextAreaWidget;
-import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Text;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -30,7 +31,8 @@ import java.util.function.Consumer;
  *
  * @author LambdAurora
  */
-public class SpruceUITest implements ClientModInitializer {
+@Mod(value = "spruceui_test", dist = Dist.CLIENT)
+public class SpruceUITest {
 	private static SpruceUITest INSTANCE;
 
 	private final SpruceOption booleanOption;
@@ -128,10 +130,8 @@ public class SpruceUITest implements ClientModInitializer {
 		}, Text.literal("Represents a reset option.\n"
 				+ "The option title is already defined and translated in several languages.\n"
 				+ "You have to manage screen re-initialization and reset logic yourself."));
-	}
 
-	@Override
-	public void onInitializeClient() {
+
 		INSTANCE = this;
 	}
 

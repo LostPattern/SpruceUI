@@ -12,10 +12,11 @@ package dev.lambdaurora.spruceui.hud;
 import dev.lambdaurora.spruceui.event.OpenScreenCallback;
 import dev.lambdaurora.spruceui.event.ResolutionChangeCallback;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -32,8 +33,8 @@ import java.util.Optional;
 public class HudManager {
 	private static final Map<Identifier, Hud> HUDS = new Object2ObjectOpenHashMap<>();
 
-	public void initialize() {
-		HudRenderCallback.EVENT.register((graphics, deltaTracker) -> HUDS.forEach((id, hud) -> {
+	public static void initialize() {
+		/*HudRenderCallback.EVENT.register((graphics, deltaTracker) -> HUDS.forEach((id, hud) -> {
 			if (hud.isEnabled() && hud.isVisible())
 				hud.render(graphics, deltaTracker);
 		}));
@@ -44,9 +45,27 @@ public class HudManager {
 				if (hud.isEnabled() && hud.isVisible() && hud.hasTicks())
 					hud.tick();
 			});
-		});
+		});*/
 		OpenScreenCallback.EVENT.register((client, screen) -> initAll(client, client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight()));
 		ResolutionChangeCallback.EVENT.register(client -> initAll(client, client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight()));
+	}
+
+	@ApiStatus.Internal
+	public static void hudRenderCallback(GuiGraphics graphics, DeltaTracker deltaTracker) {
+		HUDS.forEach((id, hud) -> {
+			if (hud.isEnabled() && hud.isVisible())
+				hud.render(graphics, deltaTracker);
+		});
+	}
+
+	@ApiStatus.Internal
+	public static void endClientTick(Minecraft client) {
+		if (!canRenderHuds(client))
+			return;
+		HUDS.forEach((id, hud) -> {
+			if (hud.isEnabled() && hud.isVisible() && hud.hasTicks())
+				hud.tick();
+		});
 	}
 
 	protected static void initAll(@NotNull Minecraft client, int screenWidth, int screenHeight) {

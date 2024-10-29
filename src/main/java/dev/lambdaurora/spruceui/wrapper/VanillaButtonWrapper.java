@@ -12,11 +12,11 @@ package dev.lambdaurora.spruceui.wrapper;
 import dev.lambdaurora.spruceui.navigation.NavigationDirection;
 import dev.lambdaurora.spruceui.widget.AbstractSpruceButtonWidget;
 import dev.lambdaurora.spruceui.widget.SpruceElement;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 /**
  * Represents a vanilla button wrapper for SpruceUI's own button widgets.
@@ -25,7 +25,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
  * @version 5.0.0
  * @since 2.0.0
  */
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class VanillaButtonWrapper extends AbstractWidget implements SpruceElement {
 	private final AbstractSpruceButtonWidget widget;
 

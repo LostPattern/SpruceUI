@@ -3,7 +3,8 @@
   "package": "dev.lambdaurora.spruceui.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "GuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1
